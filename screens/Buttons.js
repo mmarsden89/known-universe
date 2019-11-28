@@ -21,8 +21,10 @@ import { MonoText } from '../components/StyledText';
 class Buttons extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      opacity: .5
+    }
   }
-
 
   render() {
     return (
@@ -34,12 +36,21 @@ class Buttons extends Component {
             color="#fff"
           />
         </View>
+        <View style={styles.superlike}>
+          <Icon
+            name="star"
+            size={40}
+            color="#fff"
+            style={styles.icon}
+            />
+        </View>
         <View style={styles.like}>
           <Icon
             name="heart"
             size={40}
             color="#fff"
             style={styles.icon}
+            onClick={this.handleLike}
             />
         </View>
       </View>
@@ -51,8 +62,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: '#F3FFBD',
     justifyContent: 'space-around',
-    flexDirection: 'row',
-    justifyContent: 'center'
+    flexDirection: 'row'
   },
   icon: {
     margin: 0,
@@ -64,7 +74,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    opacity: .5
   },
   dislike: {
     backgroundColor: '#FF1654',
@@ -73,6 +84,15 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  superlike: {
+    backgroundColor: '#247BA0',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5
   }
 });
 

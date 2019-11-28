@@ -53,7 +53,7 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   top: {
     backgroundColor: '#F3FFBD',
-    paddingBottom: 0
+    paddingBottom: 20
   },
   container: {
     height: '90%',
@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttons: {
-    position: 'absolute',
-    bottom: 0
+    position: 'absolute'
   }
 });
 

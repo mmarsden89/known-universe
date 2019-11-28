@@ -21,30 +21,35 @@ import { MonoText } from '../components/StyledText';
 class CharCard extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      animatedValue: new Animated.ValueXY()
+    }
   }
 
   componentWillMount() {
-    this.animatedValue = new Animated.ValueXY();
-    this._value = {x: 0, y: 0}
-    this.animatedValue.addListener((value) => this._value = value);
-    this.panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+    // this._value = {x: 0, y: 0}
+    this._animatedValueX = 0
+    this._animatedValueY = 0
+    this.state.animatedValue.x.addListener((value) => this._animatedValueX = value.value);
+    this.state.animatedValue.y.addListener((value) => this._animatedValueY = value.value);
+
+    // this.animatedValue.addListener((value) => this._value = value);
+    this._panResponder = PanResponder.create({
+      onMoveShouldSetResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
       onPanResponderGrant: (e, gestureState) => {
-        this.animatedValue.setOffset({
-          x: this._value.x,
-          y: this._value.y,
+        this.state.animatedValue.setOffset({
+          x: this._animatedValueX,
+          y: this._animatedValueY,
         })
-        this.animatedValue.setValue({ x: 0, y: 0})
+        this.state.animatedValue.setValue({ x: 0, y: 0})
       },
       onPanResponderMove: Animated.event([
-        null, { dx: this.animatedValue.x, dy: this.animatedValue.y}
+        null, { dx: this.state.animatedValue.x, dy: this.state.animatedValue.y}
       ]),
-      onPanResponderRelease: (e, gestureState) => {
-        this.animatedValue.flattenOffset();
-        Animated.decay(this.animatedValue, {
-          deceleration: .999,
-          velocity: { x: gestureState.vx > 0 ? 2 : -2, y: 0 }
+      onPanResponderRelease: () => {
+        Animated.spring(this.state.animatedValue, {
+          toValue: 0
         }).start();
       },
     })
@@ -52,14 +57,21 @@ class CharCard extends Component {
 
   render() {
     const animatedStyle = {
-      transform: this.animatedValue.getTranslateTransform(),
+      transform: [
+        {
+          translateX: this.state.animatedValue.x
+        },
+        {
+          translateY: this.state.animatedValue.y
+        },
+      {
+        rotate: this.state.animatedValue.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]})
     }
-    const otherStyle = {
-      rotate: this.state.pan.x.interpolate({inputRange: [-200, 0, 200], outputRange: ["-30deg", "0deg", "30deg"]})
-    }
+  ]
+}
     return (
       <Animated.View style={[styles.hm, animatedStyle]}
-      {...this.panResponder.panHandlers}>
+      {...this._panResponder.panHandlers}>
         <Image
           style={{height: '100%', width: '100%', resizeMode: 'cover'}}
           source={{uri: this.props.char.image}}/>
